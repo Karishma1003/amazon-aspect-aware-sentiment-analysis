@@ -39,18 +39,16 @@ This project is a Django-based web application that performs aspect-aware sentim
 
 ### Home Page
 
-![Home Page](screenshots/home_page.png)
+![Home Page](screenshots/Home%20page.png)
 
+### Results Page
 
-### Results
+![Results Page](screenshots/Result%20Page%201.png)
 
-![Results 1](screenshots/results_page_1.png)
+![Results Page 2](screenshots/Result%20Page%202.png)
 
-![Results 2](screenshots/results_page_2.png)
-
-![Results 3](screenshots/results_page_3.png)
-
+![Results Page 3](screenshots/Result%20Page%203.png)
 
 ### All Reviews
 
-![All Reviews](screenshots/all_reviews.png)
+![All Reviews](screenshots/All%20reviews.png)
