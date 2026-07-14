@@ -13,3 +13,12 @@ This project is a Django-based web application that performs aspect-aware sentim
 - Displays sentiment summaries and analysis results through a user-friendly web interface.
 - Reuses previously analyzed products from the database to reduce unnecessary API calls.
 
+## Technologies Used
+
+- Python
+- Django
+- RoBERTa (Transformer Model)
+- Rainforest API
+- SQLite
+- HTML
+- CSS (Inline Styling)
