@@ -22,3 +22,15 @@ This project is a Django-based web application that performs aspect-aware sentim
 - SQLite
 - HTML
 - CSS (Inline Styling)
+
+## Project Workflow
+
+1. User enters an Amazon Product ASIN or Product URL.
+2. The application validates the input.
+3. Product information and reviews are fetched using the Rainforest API.
+4. Reviews are preprocessed.
+5. The RoBERTa model analyzes each review and predicts its sentiment.
+6. Aspect-wise sentiment analysis is performed.
+7. Results are stored in the database.
+8. Overall sentiment statistics and aspect analysis are displayed through the Django web interface.
+
