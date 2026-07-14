@@ -52,3 +52,53 @@ This project is a Django-based web application that performs aspect-aware sentim
 ### All Reviews
 
 ![All Reviews](screenshots/All%20reviews.png)
+
+
+## Project Structure
+
+```
+amazon-aspect-aware-sentiment-analysis/
+│
+├── analysis/
+│   ├── analyzer.py
+│   ├── api_fetcher.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── templates/
+│   └── migrations/
+│
+├── amazon_project/
+│   ├── settings.py
+│   ├── urls.py
+│   └── ...
+│
+├── screenshots/
+├── manage.py
+├── requirements.txt
+└── README.md
+```
+
+## Future Enhancements
+
+- Improve aspect extraction accuracy.
+- Add graphical dashboards for sentiment visualization.
+- Export analysis reports.
+- Support multiple e-commerce platforms.
+- Add user authentication and analysis history.
+
+
+## Author
+
+**Karishma Bargaje**
+
+Information Technology Graduate
+
+GitHub: https://github.com/Karishma1003
+
+LinkedIn: https://www.linkedin.com/in/karishma-b-120155294
+
+
+## License
+
+This project was developed for educational and academic purposes.
