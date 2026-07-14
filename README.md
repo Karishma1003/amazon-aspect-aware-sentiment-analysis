@@ -34,3 +34,23 @@ This project is a Django-based web application that performs aspect-aware sentim
 7. Results are stored in the database.
 8. Overall sentiment statistics and aspect analysis are displayed through the Django web interface.
 
+
+## Screenshots
+
+### Home Page
+
+![Home Page](screenshots/home_page.png)
+
+
+### Results
+
+![Results 1](screenshots/results_page_1.png)
+
+![Results 2](screenshots/results_page_2.png)
+
+![Results 3](screenshots/results_page_3.png)
+
+
+### All Reviews
+
+![All Reviews](screenshots/all_reviews.png)
