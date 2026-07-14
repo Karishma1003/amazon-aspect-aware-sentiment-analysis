@@ -1,0 +1,184 @@
+<!-- # templates/reviews/full_reviews.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Reviews - {{ product.name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .product-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .reviews-count {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+            color: #666;
+        }
+        .review-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .review-author {
+            font-weight: bold;
+            color: #333;
+        }
+        .review-rating {
+            color: #ffa41c;
+            font-weight: bold;
+        }
+        .review-title {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        .review-text {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .review-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #888;
+        }
+        .sentiment-badge {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .sentiment-positive { background: #d4edda; color: #155724; }
+        .sentiment-negative { background: #f8d7da; color: #721c24; }
+        .sentiment-neutral { background: #e2e3e5; color: #383d41; }
+        .verified-badge {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .pagination {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="{% url 'review_results' product.asin %}" class="back-btn">← Back to Analysis</a>
+            <h1>All Reviews</h1>
+            <p>{{ product.name }}</p>
+        </header>
+
+        <div class="product-summary">
+            <p><strong>ASIN:</strong> {{ product.asin }} | <strong>Overall Rating:</strong> ⭐ {{ product.rating|floatformat:1 }} | <strong>Total Reviews:</strong> {{ product.total_reviews }}</p>
+        </div>
+
+        <div class="reviews-count">
+            Showing {{ reviews|length }} reviews
+        </div>
+
+        {% if reviews %}
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-author">{{ review.author }}</div>
+                    <div class="review-rating">
+                        {% with ''|center:review.rating as range %}
+                        {% for _ in range %}⭐{% endfor %}
+                        {% endwith %}
+                        ({{ review.rating }}/5)
+                    </div>
+                </div>
+                
+                <div class="review-title">{{ review.title }}</div>
+                
+                <div class="review-text">
+                    {{ review.text|linebreaks }}
+                </div>
+                
+                <div class="review-footer">
+                    <div>
+                        {% if review.verified_purchase %}
+                        <span class="verified-badge">✓ Verified Purchase</span>
+                        {% endif %}
+                        <span style="margin-left: 10px;">📅 {{ review.date|date:"M d, Y" }}</span>
+                    </div>
+                    <div>
+                        <span class="sentiment-badge sentiment-{{ review.sentiment|lower }}">
+                            {{ review.sentiment }} ({{ review.sentiment_score|floatformat:2 }})
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No reviews found</h3>
+                <p>There are no reviews available for this product.</p>
+            </div>
+        {% endif %}
+
+        <div class="pagination">
+            <a href="{% url 'review_results' product.asin %}" style="color: #667eea; text-decoration: none; font-weight: bold;">
+                ← Return to Analysis Summary
+            </a>
+        </div>
+    </div>
+</body>
+</html>

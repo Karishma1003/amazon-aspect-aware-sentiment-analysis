@@ -1,0 +1,188 @@
+<!-- templates/reviews/processing.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing - Amazon Review Analyzer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 5px;
+            width: 0%;
+            animation: progress 2s ease-in-out infinite;
+        }
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+        .status-message {
+            color: #666;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+        .steps {
+            text-align: left;
+            margin: 30px 0;
+        }
+        .step {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+        }
+        .step::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+        .step.pending::before {
+            content: "⟳";
+            color: #ffc107;
+        }
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Analyzing Product Reviews</h1>
+        <p class="status-message">Please wait while we analyze reviews for ASIN: <strong>{{ asin }}</strong></p>
+        
+        <div class="loader"></div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        
+        <div class="steps">
+            <div class="step" id="step1">Fetching product information...</div>
+            <div class="step pending" id="step2">Scraping customer reviews...</div>
+            <div class="step pending" id="step3">Analyzing sentiments...</div>
+            <div class="step pending" id="step4">Generating aspect analysis...</div>
+            <div class="step pending" id="step5">Preparing results...</div>
+        </div>
+        
+        <div class="error" id="errorMessage"></div>
+        
+        <p style="color: #888; margin-top: 30px; font-size: 0.9em;">
+            This may take 1-2 minutes depending on the number of reviews...
+        </p>
+    </div>
+
+    <script>
+        const asin = "{{ asin }}";
+        let step = 1;
+        
+        function updateStep(stepNumber) {
+            // Mark current step as completed
+            const currentStep = document.getElementById(`step${stepNumber}`);
+            if (currentStep) {
+                currentStep.classList.remove('pending');
+                currentStep.textContent = currentStep.textContent.replace('...', ' ✓');
+            }
+            
+            // Activate next step
+            const nextStep = document.getElementById(`step${stepNumber + 1}`);
+            if (nextStep) {
+                nextStep.classList.add('pending');
+            }
+        }
+        
+        function checkStatus() {
+            fetch(`/check-status/${asin}/`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Status:', data);
+                    
+                    // Update steps based on status
+                    if (step < 5) {
+                        step++;
+                        updateStep(step);
+                    }
+                    
+                    if (data.status === 'completed') {
+                        // Redirect to results page
+                        window.location.href = `/results/${asin}/`;
+                    } else if (data.status === 'failed') {
+                        // Show error
+                        document.getElementById('errorMessage').textContent = 
+                            'Analysis failed. Please try again or use a different ASIN.';
+                        document.getElementById('errorMessage').style.display = 'block';
+                    } else if (data.status === 'processing') {
+                        // Continue checking
+                        setTimeout(checkStatus, 3000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking status:', error);
+                    if (step < 5) {
+                        step++;
+                        updateStep(step);
+                    }
+                    setTimeout(checkStatus, 5000);
+                });
+        }
+        
+        // Start checking status after 3 seconds
+        setTimeout(checkStatus, 3000);
+        
+        // Auto-check every 5 seconds
+        setInterval(checkStatus, 5000);
+        
+        // Update first step immediately
+        updateStep(1);
+    </script>
+</body>
+</html>
