@@ -1,4 +1,6 @@
-# Amazon Aspect-Aware Sentiment Analysis
+# Amazon Review Sentiment Analysis
+
+> A Django web application that performs aspect-aware sentiment analysis on Amazon product reviews using the RoBERTa transformer model.
 
 ## Overview
 
